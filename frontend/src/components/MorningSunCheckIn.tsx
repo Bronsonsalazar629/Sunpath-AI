@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Sun, Heart, Globe, Users } from "lucide-react";
 import sunriseHero from "@/assets/sunrise-hero.jpg";
+import { useTranslation } from "react-i18next";
 
 interface CulturalGreeting {
   id: string;
@@ -11,35 +12,35 @@ interface CulturalGreeting {
   cultural_context: string;
 }
 
-const culturalGreetings: CulturalGreeting[] = [
-  {
-    id: "spanish",
-    greeting: "¿Cómo amaneció tu corazón?",
-    language: "Español",
-    cultural_context: "How did your heart wake up?"
-  },
-  {
-    id: "english",
-    greeting: "How is your heart this morning?",
-    language: "English",
-    cultural_context: "Universal warmth"
-  },
-  {
-    id: "mandarin",
-    greeting: "你的心今天怎么样？",
-    language: "中文",
-    cultural_context: "How is your heart today?"
-  },
-  {
-    id: "arabic",
-    greeting: "كيف قلبك هذا الصباح؟",
-    language: "العربية",
-    cultural_context: "How is your heart this morning?"
-  }
-];
-
 const MorningSunCheckIn = () => {
-  const [selectedGreeting, setSelectedGreeting] = useState(culturalGreetings[1]);
+  const { t } = useTranslation();
+  const culturalGreetings: CulturalGreeting[] = [
+    {
+      id: "spanish",
+      greeting: t('morningSun.greetings.spanish'),
+      language: "Español",
+      cultural_context: t('morningSun.culturalContext.spanish')
+    },
+    {
+      id: "english",
+      greeting: t('morningSun.greetings.english'),
+      language: "English",
+      cultural_context: t('morningSun.culturalContext.english')
+    },
+    {
+      id: "mandarin",
+      greeting: t('morningSun.greetings.mandarin'),
+      language: "中文",
+      cultural_context: t('morningSun.culturalContext.mandarin')
+    },
+    {
+      id: "arabic",
+      greeting: t('morningSun.greetings.arabic'),
+      language: "العربية",
+      cultural_context: t('morningSun.culturalContext.arabic')
+    }
+  ];
+  const [selectedGreeting, setSelectedGreeting] = useState<CulturalGreeting>(culturalGreetings[1]);
   const [currentStep, setCurrentStep] = useState<'greeting' | 'checkin'>('greeting');
 
   const handleBeginCheckIn = () => {
@@ -65,11 +66,11 @@ const MorningSunCheckIn = () => {
             </div>
             
             <h1 className="text-4xl md:text-6xl font-bold text-wisdom bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary mb-4">
-              SunPath AI
+              {t('common.appName')}
             </h1>
-            
+
             <p className="text-xl text-gentle max-w-2xl mx-auto mb-8">
-              A warm embrace for every heart - your culturally-intelligent mental wellness companion
+              {t('morningSun.hero.tagline')}
             </p>
           </div>
 
@@ -100,12 +101,12 @@ const MorningSunCheckIn = () => {
               ))}
             </div>
 
-            <Button 
+            <Button
               onClick={handleBeginCheckIn}
               className="btn-sunrise w-full text-lg py-6"
             >
               <Heart className="w-5 h-5 mr-2" />
-              Begin Heart Check-In
+              {t('morningSun.hero.beginButton')}
             </Button>
           </Card>
 
@@ -113,11 +114,11 @@ const MorningSunCheckIn = () => {
           <div className="flex items-center gap-6 text-gentle text-sm">
             <div className="flex items-center gap-2">
               <Globe className="w-4 h-4" />
-              <span>100+ Cultures Honored</span>
+              <span>{t('morningSun.hero.culturesHonored')}</span>
             </div>
             <div className="flex items-center gap-2">
               <Users className="w-4 h-4" />
-              <span>All Ages Welcome</span>
+              <span>{t('morningSun.hero.allAgesWelcome')}</span>
             </div>
           </div>
         </div>
@@ -129,15 +130,16 @@ const MorningSunCheckIn = () => {
 };
 
 const EmotionalAssessment = ({ selectedGreeting }: { selectedGreeting: CulturalGreeting }) => {
+  const { t } = useTranslation();
   const [emotions, setEmotions] = useState<Record<string, number>>({});
 
   const emotionalDimensions = [
-    { key: 'joy', label: 'Joy & Gratitude', icon: '😊', cultural: 'Universal happiness' },
-    { key: 'calm', label: 'Inner Peace', icon: '🕊️', cultural: 'Spiritual alignment' },
-    { key: 'connection', label: 'Social Connection', icon: '🤝', cultural: 'Community belonging' },
-    { key: 'family', label: 'Family Harmony', icon: '👨‍👩‍👧‍👦', cultural: 'Collective wellness' },
-    { key: 'purpose', label: 'Life Purpose', icon: '🌟', cultural: 'Meaning & direction' },
-    { key: 'environment', label: 'Environmental Comfort', icon: '🌿', cultural: 'Space & nature' }
+    { key: 'joy', label: t('morningSun.dimensions.joy.label'), icon: '😊', cultural: t('morningSun.dimensions.joy.cultural') },
+    { key: 'calm', label: t('morningSun.dimensions.calm.label'), icon: '🕊️', cultural: t('morningSun.dimensions.calm.cultural') },
+    { key: 'connection', label: t('morningSun.dimensions.connection.label'), icon: '🤝', cultural: t('morningSun.dimensions.connection.cultural') },
+    { key: 'family', label: t('morningSun.dimensions.family.label'), icon: '👨‍👩‍👧‍👦', cultural: t('morningSun.dimensions.family.cultural') },
+    { key: 'purpose', label: t('morningSun.dimensions.purpose.label'), icon: '🌟', cultural: t('morningSun.dimensions.purpose.cultural') },
+    { key: 'environment', label: t('morningSun.dimensions.environment.label'), icon: '🌿', cultural: t('morningSun.dimensions.environment.cultural') }
   ];
 
   const updateEmotion = (key: string, value: number) => {
@@ -153,7 +155,7 @@ const EmotionalAssessment = ({ selectedGreeting }: { selectedGreeting: CulturalG
             {selectedGreeting.greeting}
           </h1>
           <p className="text-gentle">
-            Share how your heart feels across these dimensions of wellness
+            {t('morningSun.shareYourHeart')}
           </p>
         </div>
 
@@ -170,8 +172,8 @@ const EmotionalAssessment = ({ selectedGreeting }: { selectedGreeting: CulturalG
               {/* Gentle Emotion Scale */}
               <div className="space-y-2">
                 <div className="flex justify-between text-xs text-gentle">
-                  <span>Struggling</span>
-                  <span>Flourishing</span>
+                  <span>{t('morningSun.scale.struggling')}</span>
+                  <span>{t('morningSun.scale.flourishing')}</span>
                 </div>
                 <div className="relative">
                   <input
@@ -195,7 +197,7 @@ const EmotionalAssessment = ({ selectedGreeting }: { selectedGreeting: CulturalG
         <div className="text-center">
           <Button className="btn-sunrise px-8 py-3 text-lg">
             <Heart className="w-5 h-5 mr-2" />
-            Complete Check-In
+            {t('morningSun.completeCheckIn')}
           </Button>
         </div>
       </div>
