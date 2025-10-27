@@ -16,16 +16,14 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Database URL with PostGIS support
-DATABASE_URL = os.getenv(
-    'DATABASE_URL', 
-    'postgresql://postgres:password@localhost:5432/mindmap'
-)
+# Import settings to get proper DATABASE_URL
+from core.config import settings
 
 # Create engine with advanced connection pooling for production
+# Using settings.DATABASE_URL ensures .env file is read first
 engine = create_engine(
-    DATABASE_URL,
-    echo=os.getenv('NODE_ENV') == 'development',
+    settings.DATABASE_URL,
+    echo=settings.DEBUG,
     pool_size=10,  # Number of connections to maintain in pool
     max_overflow=20,  # Additional connections beyond pool_size
     pool_timeout=30,  # Seconds to wait for connection
@@ -39,7 +37,7 @@ engine = create_engine(
     # Enable query logging for research compliance
     logging_name="sqlalchemy.engine",
     # Connection pooling events for monitoring
-    echo_pool=os.getenv('NODE_ENV') == 'development'
+    echo_pool=settings.DEBUG
 )
 
 # Session factory
@@ -143,16 +141,17 @@ db_manager = DatabaseManager()
 
 def init_database():
     """Initialize database with all tables and extensions."""
-    # Enable PostGIS extension
-    with engine.connect() as connection:
-        try:
-            connection.execute("CREATE EXTENSION IF NOT EXISTS postgis;")
-            connection.execute("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";")
-            connection.execute("CREATE EXTENSION IF NOT EXISTS pgcrypto;")
-            connection.commit()
-            logger.info("PostGIS and required extensions enabled successfully")
-        except Exception as e:
-            logger.error(f"Error enabling extensions: {e}")
+    # Only enable PostgreSQL-specific extensions if using PostgreSQL
+    if settings.DATABASE_URL.startswith("postgresql://"):
+        with engine.connect() as connection:
+            try:
+                connection.execute("CREATE EXTENSION IF NOT EXISTS postgis;")
+                connection.execute("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";")
+                connection.execute("CREATE EXTENSION IF NOT EXISTS pgcrypto;")
+                connection.commit()
+                logger.info("PostGIS and required PostgreSQL extensions enabled successfully")
+            except Exception as e:
+                logger.error(f"Error enabling PostgreSQL extensions: {e}")
     
     # Create all tables
     Base.metadata.create_all(bind=engine)

@@ -4,17 +4,20 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  Languages, 
-  Globe, 
-  Heart, 
-  MessageCircle, 
+import { useTranslation } from 'react-i18next';
+import {
+  Languages,
+  Globe,
+  Heart,
+  MessageCircle,
   Mic,
   Volume2,
   Shuffle,
   Users,
   BookOpen,
-  Sparkles
+  Sparkles,
+  ToggleLeft,
+  ToggleRight
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -39,10 +42,29 @@ interface MultiCulturalLanguageInterfaceProps {
 }
 
 export function MultiCulturalLanguageInterface({ className }: MultiCulturalLanguageInterfaceProps) {
+  const { t, i18n } = useTranslation();
   const [primaryLanguage, setPrimaryLanguage] = useState('en');
   const [familyLanguages, setFamilyLanguages] = useState<string[]>(['es']);
   const [codeSwitchingEnabled, setCodeSwitchingEnabled] = useState(true);
   const [selectedExpression, setSelectedExpression] = useState<CulturalExpression | null>(null);
+  const [uiTranslationEnabled, setUiTranslationEnabled] = useState(false);
+
+  const handleLanguageChange = (langCode: string) => {
+    setPrimaryLanguage(langCode);
+    if (uiTranslationEnabled) {
+      i18n.changeLanguage(langCode);
+    }
+  };
+
+  const handleTranslationModeToggle = () => {
+    const newMode = !uiTranslationEnabled;
+    setUiTranslationEnabled(newMode);
+    if (newMode) {
+      i18n.changeLanguage(primaryLanguage);
+    } else {
+      i18n.changeLanguage('en');
+    }
+  };
 
   const supportedLanguages: Language[] = [
     { code: 'en', name: 'English', nativeName: 'English', flag: '🇺🇸' },
@@ -114,13 +136,46 @@ export function MultiCulturalLanguageInterface({ className }: MultiCulturalLangu
 
   return (
     <Card className={cn("p-6 bg-gradient-to-br from-background to-muted/30", className)}>
-      <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center">
-          <Languages className="w-5 h-5 text-white" />
+      <div className="flex items-center justify-between gap-3 mb-6">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center">
+            <Languages className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <h3 className="text-lg font-semibold text-foreground">{t('language.title')}</h3>
+            <p className="text-sm text-muted-foreground">{t('language.description')}</p>
+          </div>
         </div>
-        <div>
-          <h3 className="text-lg font-semibold text-foreground">Multicultural Expression Interface</h3>
-          <p className="text-sm text-muted-foreground">Communicate naturally in your languages and cultural expressions</p>
+
+        {/* Translation Mode Toggle */}
+        <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-lg">
+          <div className="flex flex-col items-end">
+            <span className="text-sm font-medium text-amber-900">{t('language.translationModeLabel')}</span>
+            <span className="text-xs text-amber-700">
+              {uiTranslationEnabled ? t('language.uiTranslation') : t('language.aiPreference')}
+            </span>
+          </div>
+          <Button
+            variant={uiTranslationEnabled ? "default" : "outline"}
+            size="sm"
+            onClick={handleTranslationModeToggle}
+            className={cn(
+              "transition-all",
+              uiTranslationEnabled && "bg-gradient-to-r from-blue-500 to-purple-500"
+            )}
+          >
+            {uiTranslationEnabled ? (
+              <>
+                <ToggleRight className="w-4 h-4 mr-2" />
+                {t('language.enabled')}
+              </>
+            ) : (
+              <>
+                <ToggleLeft className="w-4 h-4 mr-2" />
+                {t('language.disabled')}
+              </>
+            )}
+          </Button>
         </div>
       </div>
 
@@ -144,7 +199,7 @@ export function MultiCulturalLanguageInterface({ className }: MultiCulturalLangu
                   key={lang.code}
                   variant={primaryLanguage === lang.code ? "default" : "outline"}
                   className="h-auto p-3 flex flex-col items-center text-center"
-                  onClick={() => setPrimaryLanguage(lang.code)}
+                  onClick={() => handleLanguageChange(lang.code)}
                 >
                   <span className="text-2xl mb-1">{lang.flag}</span>
                   <span className="font-medium text-xs">{lang.name}</span>

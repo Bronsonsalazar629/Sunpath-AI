@@ -21,28 +21,38 @@ export const ThemeProvider = ({ children }) => {
   useEffect(() => {
     loadThemePreference();
 
-    // Listen for system theme changes
-    const subscription = Appearance.addChangeListener(({ colorScheme }) => {
-      if (colorScheme) {
-        setIsDarkMode(colorScheme === 'dark');
-      }
-    });
+    // Disable automatic system theme changes - use manual toggle instead
+    // This ensures consistent light mode UI by default
+    // const subscription = Appearance.addChangeListener(({ colorScheme }) => {
+    //   if (colorScheme) {
+    //     setIsDarkMode(colorScheme === 'dark');
+    //   }
+    // });
 
-    return () => subscription?.remove();
+    // return () => subscription?.remove();
   }, []);
 
   const loadThemePreference = async () => {
     try {
-      const savedTheme = await AsyncStorage.getItem(STORAGE_KEYS.THEME_MODE);
-      if (savedTheme) {
-        setIsDarkMode(savedTheme === 'dark');
-      } else {
-        // Use system preference
-        const systemTheme = Appearance.getColorScheme();
-        setIsDarkMode(systemTheme === 'dark');
-      }
+      // ONE-TIME RESET: Force light mode to fix dark mode issue
+      // After this runs once, remove these 3 lines and uncomment the code below
+      setIsDarkMode(false);
+      await AsyncStorage.setItem(STORAGE_KEYS.THEME_MODE, 'light');
+
+      // UNCOMMENT AFTER FIRST RUN TO RESPECT USER PREFERENCE:
+      // const savedTheme = await AsyncStorage.getItem(STORAGE_KEYS.THEME_MODE);
+      // if (savedTheme) {
+      //   // Respect user's saved preference
+      //   setIsDarkMode(savedTheme === 'dark');
+      // } else {
+      //   // Default to light mode for pristine white UI on first launch
+      //   setIsDarkMode(false);
+      //   await AsyncStorage.setItem(STORAGE_KEYS.THEME_MODE, 'light');
+      // }
     } catch (error) {
       console.error('Error loading theme preference:', error);
+      // Fallback to light mode even if storage fails
+      setIsDarkMode(false);
     } finally {
       setIsLoading(false);
     }

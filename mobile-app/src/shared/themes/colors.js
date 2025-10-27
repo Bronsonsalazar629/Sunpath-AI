@@ -99,8 +99,8 @@ export const colors = {
   light: {
     background: '#F8F9FA',
     surface: '#FFFFFF',
-    text: '#1E3A8A',
-    textSecondary: '#6B7280',
+    text: '#1E293B',
+    textSecondary: '#64748B',
     border: '#E5E7EB',
   },
 
@@ -110,5 +110,12 @@ export const colors = {
     text: '#F1F5F9',
     textSecondary: '#94A3B8',
     border: '#334155',
-  }
+  },
+
+  // Add text namespace for easier access
+  text: {
+    primary: '#1E3A8A',
+    secondary: '#6B7280',
+  },
+
 };

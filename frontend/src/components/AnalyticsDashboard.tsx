@@ -1,22 +1,24 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { 
-  BarChart3, 
-  TrendingUp, 
-  Users, 
+import { useTranslation } from "react-i18next";
+import {
+  BarChart3,
+  TrendingUp,
+  Users,
   Brain,
   Activity,
   ArrowLeft
 } from "lucide-react";
-import PersonalCulturalDashboard, { 
-  PredictiveIntelligenceCenter, 
-  EnvironmentalWellnessInsights 
+import PersonalCulturalDashboard, {
+  PredictiveIntelligenceCenter,
+  EnvironmentalWellnessInsights
 } from "./analytics/PersonalCulturalDashboard";
 import CommunityCulturalHealthInsights from "./analytics/CommunityCulturalHealthInsights";
 import HealthcareProviderInsights from "./analytics/HealthcareProviderInsights";
 
 const AnalyticsDashboard = () => {
+  const { t } = useTranslation();
   const [activeView, setActiveView] = useState<'overview' | 'personal' | 'predictive' | 'environmental' | 'community' | 'provider'>('overview');
 
   const handleBackToOverview = () => {
@@ -30,7 +32,7 @@ const AnalyticsDashboard = () => {
           <div className="flex items-center gap-4 mb-6">
             <Button variant="outline" onClick={handleBackToOverview}>
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Analytics
+              {t('analytics.backToAnalytics')}
             </Button>
           </div>
           <PersonalCulturalDashboard />
@@ -46,7 +48,7 @@ const AnalyticsDashboard = () => {
           <div className="flex items-center gap-4 mb-6">
             <Button variant="outline" onClick={handleBackToOverview}>
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Analytics
+              {t('analytics.backToAnalytics')}
             </Button>
           </div>
           <PredictiveIntelligenceCenter />
@@ -62,7 +64,7 @@ const AnalyticsDashboard = () => {
           <div className="flex items-center gap-4 mb-6">
             <Button variant="outline" onClick={handleBackToOverview}>
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Analytics
+              {t('analytics.backToAnalytics')}
             </Button>
           </div>
           <EnvironmentalWellnessInsights />
@@ -78,7 +80,7 @@ const AnalyticsDashboard = () => {
           <div className="flex items-center gap-4 mb-6">
             <Button variant="outline" onClick={handleBackToOverview}>
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Analytics
+              {t('analytics.backToAnalytics')}
             </Button>
           </div>
           <CommunityCulturalHealthInsights />
@@ -94,7 +96,7 @@ const AnalyticsDashboard = () => {
           <div className="flex items-center gap-4 mb-6">
             <Button variant="outline" onClick={handleBackToOverview}>
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Analytics
+              {t('analytics.backToAnalytics')}
             </Button>
           </div>
           <HealthcareProviderInsights />
@@ -114,8 +116,8 @@ const AnalyticsDashboard = () => {
                 <BarChart3 className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-wisdom">Wisdom Through Beautiful Data</h1>
-                <p className="text-sm text-gentle">Cultural analytics that feel like gentle wisdom</p>
+                <h1 className="text-xl font-bold text-wisdom">{t('analytics.title')}</h1>
+                <p className="text-sm text-gentle">{t('analytics.subtitle')}</p>
               </div>
             </div>
           </div>
@@ -127,11 +129,10 @@ const AnalyticsDashboard = () => {
         <Card className="card-warm p-8 mb-8">
           <div className="text-center">
             <h2 className="text-3xl font-bold text-wisdom mb-4">
-              Transform Data Into Cultural Wisdom
+              {t('analytics.transformData')}
             </h2>
             <p className="text-gentle text-lg max-w-3xl mx-auto leading-relaxed">
-              Discover insights that honor your cultural journey, predict wellness patterns with respect, 
-              and guide your path with the wisdom of both tradition and technology.
+              {t('analytics.transformDesc')}
             </p>
           </div>
         </Card>
@@ -139,7 +140,7 @@ const AnalyticsDashboard = () => {
         {/* Analytics Categories */}
         <div className="grid lg:grid-cols-2 gap-8 mb-8">
           {/* Personal Analytics */}
-          <Card 
+          <Card
             className="card-embrace p-6 cursor-pointer hover:scale-[1.02] transition-transform group"
             onClick={() => setActiveView('personal')}
           >
@@ -148,21 +149,20 @@ const AnalyticsDashboard = () => {
                 <Activity className="w-8 h-8 text-white" />
               </div>
               <div className="flex-1">
-                <h3 className="text-xl font-semibold text-wisdom mb-2">Personal Cultural Wellness</h3>
+                <h3 className="text-xl font-semibold text-wisdom mb-2">{t('analytics.personalCultural.title')}</h3>
                 <p className="text-gentle mb-4">
-                  Your unique journey visualized through culturally-meaningful metaphors. 
-                  Track 48 emotional dimensions with beautiful, respectful insights.
+                  {t('analytics.personalCultural.description')}
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  <span className="text-xs px-2 py-1 bg-primary/10 text-primary rounded-full">Cultural Visualization</span>
-                  <span className="text-xs px-2 py-1 bg-secondary/10 text-secondary rounded-full">48-Dimensional Analysis</span>
-                  <span className="text-xs px-2 py-1 bg-accent/10 text-accent rounded-full">Personal Insights</span>
+                  <span className="text-xs px-2 py-1 bg-primary/10 text-primary rounded-full">{t('analytics.personalCultural.tags.visualization')}</span>
+                  <span className="text-xs px-2 py-1 bg-secondary/10 text-secondary rounded-full">{t('analytics.personalCultural.tags.analysis')}</span>
+                  <span className="text-xs px-2 py-1 bg-accent/10 text-accent rounded-full">{t('analytics.personalCultural.tags.insights')}</span>
                 </div>
               </div>
             </div>
           </Card>
 
-          <Card 
+          <Card
             className="card-embrace p-6 cursor-pointer hover:scale-[1.02] transition-transform group"
             onClick={() => setActiveView('predictive')}
           >
@@ -171,21 +171,20 @@ const AnalyticsDashboard = () => {
                 <Brain className="w-8 h-8 text-white" />
               </div>
               <div className="flex-1">
-                <h3 className="text-xl font-semibold text-wisdom mb-2">Predictive Intelligence</h3>
+                <h3 className="text-xl font-semibold text-wisdom mb-2">{t('analytics.predictive.title')}</h3>
                 <p className="text-gentle mb-4">
-                  Gentle foresight for better wellness. AI-powered predictions that respect 
-                  your cultural patterns and help-seeking preferences.
+                  {t('analytics.predictive.description')}
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  <span className="text-xs px-2 py-1 bg-primary/10 text-primary rounded-full">Early Warning</span>
-                  <span className="text-xs px-2 py-1 bg-secondary/10 text-secondary rounded-full">Cultural Sensitivity</span>
-                  <span className="text-xs px-2 py-1 bg-accent/10 text-accent rounded-full">Gentle Predictions</span>
+                  <span className="text-xs px-2 py-1 bg-primary/10 text-primary rounded-full">{t('analytics.predictive.tags.warning')}</span>
+                  <span className="text-xs px-2 py-1 bg-secondary/10 text-secondary rounded-full">{t('analytics.predictive.tags.sensitivity')}</span>
+                  <span className="text-xs px-2 py-1 bg-accent/10 text-accent rounded-full">{t('analytics.predictive.tags.predictions')}</span>
                 </div>
               </div>
             </div>
           </Card>
 
-          <Card 
+          <Card
             className="card-embrace p-6 cursor-pointer hover:scale-[1.02] transition-transform group"
             onClick={() => setActiveView('environmental')}
           >
@@ -194,21 +193,20 @@ const AnalyticsDashboard = () => {
                 <TrendingUp className="w-8 h-8 text-white" />
               </div>
               <div className="flex-1">
-                <h3 className="text-xl font-semibold text-wisdom mb-2">Environmental Wellness</h3>
+                <h3 className="text-xl font-semibold text-wisdom mb-2">{t('analytics.environmental.title')}</h3>
                 <p className="text-gentle mb-4">
-                  How your surroundings affect your cultural well-being. Discover wellness 
-                  patterns across spaces, times, and cultural environments.
+                  {t('analytics.environmental.description')}
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  <span className="text-xs px-2 py-1 bg-primary/10 text-primary rounded-full">Spatial Analysis</span>
-                  <span className="text-xs px-2 py-1 bg-secondary/10 text-secondary rounded-full">Time Patterns</span>
-                  <span className="text-xs px-2 py-1 bg-accent/10 text-accent rounded-full">Cultural Spaces</span>
+                  <span className="text-xs px-2 py-1 bg-primary/10 text-primary rounded-full">{t('analytics.environmental.tags.spatial')}</span>
+                  <span className="text-xs px-2 py-1 bg-secondary/10 text-secondary rounded-full">{t('analytics.environmental.tags.time')}</span>
+                  <span className="text-xs px-2 py-1 bg-accent/10 text-accent rounded-full">{t('analytics.environmental.tags.spaces')}</span>
                 </div>
               </div>
             </div>
           </Card>
 
-          <Card 
+          <Card
             className="card-embrace p-6 cursor-pointer hover:scale-[1.02] transition-transform group"
             onClick={() => setActiveView('community')}
           >
@@ -217,15 +215,14 @@ const AnalyticsDashboard = () => {
                 <Users className="w-8 h-8 text-white" />
               </div>
               <div className="flex-1">
-                <h3 className="text-xl font-semibold text-wisdom mb-2">Community Cultural Health</h3>
+                <h3 className="text-xl font-semibold text-wisdom mb-2">{t('analytics.community.title')}</h3>
                 <p className="text-gentle mb-4">
-                  Anonymous wisdom from your cultural community. Discover shared resilience 
-                  patterns and contribute to collective understanding.
+                  {t('analytics.community.description')}
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  <span className="text-xs px-2 py-1 bg-primary/10 text-primary rounded-full">Community Trends</span>
-                  <span className="text-xs px-2 py-1 bg-secondary/10 text-secondary rounded-full">Anonymous Insights</span>
-                  <span className="text-xs px-2 py-1 bg-accent/10 text-accent rounded-full">Cultural Resilience</span>
+                  <span className="text-xs px-2 py-1 bg-primary/10 text-primary rounded-full">{t('analytics.community.tags.trends')}</span>
+                  <span className="text-xs px-2 py-1 bg-secondary/10 text-secondary rounded-full">{t('analytics.community.tags.anonymous')}</span>
+                  <span className="text-xs px-2 py-1 bg-accent/10 text-accent rounded-full">{t('analytics.community.tags.resilience')}</span>
                 </div>
               </div>
             </div>
@@ -240,16 +237,16 @@ const AnalyticsDashboard = () => {
                 <Activity className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-wisdom">Healthcare Provider Portal</h3>
-                <p className="text-gentle">Professional insights for culturally-competent care</p>
+                <h3 className="text-lg font-semibold text-wisdom">{t('analytics.provider.title')}</h3>
+                <p className="text-gentle">{t('analytics.provider.description')}</p>
               </div>
             </div>
-            
-            <Button 
+
+            <Button
               onClick={() => setActiveView('provider')}
               className="btn-sunrise"
             >
-              Access Provider Insights
+              {t('analytics.provider.accessButton')}
             </Button>
           </div>
         </Card>
@@ -257,12 +254,9 @@ const AnalyticsDashboard = () => {
         {/* Cultural Ethics Notice */}
         <Card className="card-embrace p-6 mt-8">
           <div className="text-center">
-            <h4 className="font-semibold text-wisdom mb-3">🛡️ Cultural Data Sovereignty & Ethics</h4>
+            <h4 className="font-semibold text-wisdom mb-3">{t('analytics.ethics.title')}</h4>
             <p className="text-gentle text-sm max-w-4xl mx-auto leading-relaxed">
-              Every insight is generated with deep respect for cultural dignity and privacy. Your data remains 
-              yours, community elders review cultural representations, and all analytics honor the beautiful 
-              diversity of human emotional expression. We never stereotype—we celebrate the unique ways 
-              cultures approach wellness and healing.
+              {t('analytics.ethics.description')}
             </p>
           </div>
         </Card>

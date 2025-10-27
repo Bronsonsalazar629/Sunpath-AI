@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, status, Request, Query
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, field_validator
 from sqlalchemy.orm import Session
 from slowapi import Limiter
 from slowapi.util import get_remote_address
@@ -39,18 +39,20 @@ class UserProfileUpdate(BaseModel):
     preferred_language: Optional[str] = None
     timezone: Optional[str] = None
     
-    @validator('preferred_language')
+    @field_validator('preferred_language')
+    @classmethod
     def validate_language(cls, v):
         if v and len(v) not in [2, 5]:  # ISO language codes
             raise ValueError('Language code must be in ISO format (e.g., "en" or "en-US")')
         return v
-    
-    @validator('timezone')
+
+    @field_validator('timezone')
+    @classmethod
     def validate_timezone(cls, v):
         if v:
             # Basic timezone validation - in production, use pytz
             valid_timezones = [
-                'UTC', 'America/New_York', 'America/Chicago', 
+                'UTC', 'America/New_York', 'America/Chicago',
                 'America/Denver', 'America/Los_Angeles', 'Europe/London'
             ]
             if v not in valid_timezones:
@@ -65,7 +67,8 @@ class UserPreferencesUpdate(BaseModel):
     notification_preferences: Optional[dict] = None
     privacy_level: Optional[str] = None
     
-    @validator('privacy_level')
+    @field_validator('privacy_level')
+    @classmethod
     def validate_privacy_level(cls, v):
         if v and v not in ['minimal', 'standard', 'enhanced']:
             raise ValueError('Privacy level must be minimal, standard, or enhanced')
@@ -85,10 +88,11 @@ class SocialDeterminantsUpdate(BaseModel):
     financial_stress_level: Optional[int] = None
     neighborhood_safety_rating: Optional[int] = None
     
-    @validator('social_support_level', 'financial_stress_level', 'neighborhood_safety_rating')
-    def validate_ratings(cls, v, field):
+    @field_validator('social_support_level', 'financial_stress_level', 'neighborhood_safety_rating')
+    @classmethod
+    def validate_ratings(cls, v):
         if v is not None and not (1 <= v <= 5):
-            raise ValueError(f'{field.name} must be between 1 and 5')
+            raise ValueError('Rating must be between 1 and 5')
         return v
 
 

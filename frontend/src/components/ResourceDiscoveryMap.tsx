@@ -3,14 +3,15 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { 
-  MapPin, 
-  Filter, 
-  Star, 
-  Clock, 
-  Phone, 
-  Languages, 
-  Heart, 
+import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api';
+import {
+  MapPin,
+  Filter,
+  Star,
+  Clock,
+  Phone,
+  Languages,
+  Heart,
   Users,
   Shield,
   Search,
@@ -297,36 +298,69 @@ const ResourceDiscoveryMap = () => {
 
         {/* Map Area */}
         <div className="flex-1 relative">
-          <div 
-            ref={mapContainer} 
-            className="w-full h-full bg-gradient-to-br from-secondary/20 to-primary/20 flex items-center justify-center"
-          >
-            {/* Placeholder for actual map */}
-            <div className="text-center">
-              <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-primary/20 flex items-center justify-center breathe">
-                <MapPin className="w-12 h-12 text-primary" />
-              </div>
-              <h3 className="text-xl font-semibold text-wisdom mb-2">Interactive Cultural Map</h3>
-              <p className="text-gentle max-w-md">
-                Map integration will show provider locations with cultural competency indicators.
-                Click providers in the sidebar to see their location.
-              </p>
-              <div className="mt-6 flex justify-center gap-4">
-                <div className="flex items-center gap-2">
-                  <span className="text-2xl">⭐</span>
-                  <span className="text-sm text-gentle">High Cultural Competency</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-2xl">🔵</span>
-                  <span className="text-sm text-gentle">Medium Cultural Awareness</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-2xl">⚪</span>
-                  <span className="text-sm text-gentle">Standard Providers</span>
-                </div>
-              </div>
-            </div>
-          </div>
+          <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
+            <GoogleMap
+              mapContainerStyle={{ width: '100%', height: '100%' }}
+              center={
+                selectedProvider
+                  ? selectedProvider.location
+                  : { lat: 37.7749, lng: -122.4194 }
+              }
+              zoom={selectedProvider ? 14 : 12}
+              options={{
+                styles: [
+                  {
+                    featureType: 'poi',
+                    stylers: [{ visibility: 'off' }]
+                  }
+                ]
+              }}
+            >
+              {providers.map((provider) => {
+                const markerIcon = {
+                  path: window.google?.maps?.SymbolPath?.CIRCLE || 0,
+                  scale: 12,
+                  fillColor:
+                    provider.culturalCompetency === 'high'
+                      ? '#FBBF24'
+                      : provider.culturalCompetency === 'medium'
+                      ? '#3B82F6'
+                      : '#9CA3AF',
+                  fillOpacity: 1,
+                  strokeColor: '#ffffff',
+                  strokeWeight: 2,
+                };
+
+                return (
+                  <Marker
+                    key={provider.id}
+                    position={provider.location}
+                    icon={markerIcon}
+                    onClick={() => setSelectedProvider(provider)}
+                  />
+                );
+              })}
+
+              {selectedProvider && (
+                <InfoWindow
+                  position={selectedProvider.location}
+                  onCloseClick={() => setSelectedProvider(null)}
+                >
+                  <div className="p-2 max-w-xs">
+                    <h3 className="font-semibold text-sm mb-1">{selectedProvider.name}</h3>
+                    <p className="text-xs text-gray-600 mb-2">{selectedProvider.address}</p>
+                    <div className="flex items-center gap-1 mb-2">
+                      <Star className="w-3 h-3 text-yellow-500 fill-current" />
+                      <span className="text-xs">{selectedProvider.culturalRating}/5</span>
+                      <span className="text-xs text-gray-500 ml-2">
+                        {selectedProvider.culturalCompetency} cultural competency
+                      </span>
+                    </div>
+                  </div>
+                </InfoWindow>
+              )}
+            </GoogleMap>
+          </LoadScript>
 
           {/* Selected Provider Details Overlay */}
           {selectedProvider && (

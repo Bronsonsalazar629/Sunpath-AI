@@ -18,8 +18,11 @@ import pandas as pd
 # Add database module to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from base import SessionLocal
-from models import *
+from database.base import SessionLocal
+from database.models.user import User
+from database.models.mood_entry import MoodEntry
+from database.models.resource_recommendation import ResourceRecommendation
+from database.models.social_determinants import SocialDeterminants
 
 logger = logging.getLogger(__name__)
 

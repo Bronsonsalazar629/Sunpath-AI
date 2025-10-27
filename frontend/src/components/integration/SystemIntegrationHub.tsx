@@ -2,13 +2,16 @@ import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { motion, AnimatePresence } from 'motion/react';
+import { useTranslation } from 'react-i18next';
 import CulturalNavigation from '../navigation/CulturalNavigation';
 import { FeatureTransitionProvider, TransitionSuggestions, CulturalContextDisplay } from './FeatureTransitionManager';
 import AIIntegrationLayer from './AIIntegrationLayer';
-import { 
-  Layout, 
-  Compass, 
-  Zap, 
+import { BottomNavigation } from '../BottomNavigation';
+import {
+  Layout,
+  Compass,
+  Zap,
   Brain,
   Shield,
   Globe,
@@ -20,7 +23,7 @@ import {
 import Dashboard from '../Dashboard';
 import { OnboardingFlow } from '../onboarding/OnboardingFlow';
 import MorningSunCheckIn from '../MorningSunCheckIn';
-import CulturalEmotionCanvas from '../CulturalEmotionCanvas';
+import { JournalingSystem } from '../JournalingSystem';
 import { ConversationFoundation } from '../conversation/ConversationFoundation';
 import ResourceDiscoveryMap from '../ResourceDiscoveryMap';
 import AnalyticsDashboard from '../AnalyticsDashboard';
@@ -43,6 +46,7 @@ const SystemIntegrationHub: React.FC<SystemIntegrationHubProps> = ({
     family: 'inclusive'
   }
 }) => {
+  const { t } = useTranslation();
   const [currentView, setCurrentView] = useState('dashboard');
   const [integrationMode, setIntegrationMode] = useState<'navigation' | 'transitions' | 'ai' | 'features'>('features');
 
@@ -60,7 +64,7 @@ const SystemIntegrationHub: React.FC<SystemIntegrationHubProps> = ({
       case 'checkin':
         return <MorningSunCheckIn />;
       case 'canvas':
-        return <CulturalEmotionCanvas />;
+        return <JournalingSystem />;
       case 'conversation':
         return <ConversationFoundation />;
       case 'resources':
@@ -87,19 +91,19 @@ const SystemIntegrationHub: React.FC<SystemIntegrationHubProps> = ({
               <TabsList className="grid w-full grid-cols-4">
                 <TabsTrigger value="features" className="text-xs">
                   <Layout className="h-4 w-4 mr-1" />
-                  Features
+                  {t('integration.tabs.features')}
                 </TabsTrigger>
                 <TabsTrigger value="navigation" className="text-xs">
                   <Compass className="h-4 w-4 mr-1" />
-                  Navigation
+                  {t('integration.tabs.navigation')}
                 </TabsTrigger>
                 <TabsTrigger value="transitions" className="text-xs">
                   <Zap className="h-4 w-4 mr-1" />
-                  Transitions
+                  {t('integration.tabs.transitions')}
                 </TabsTrigger>
                 <TabsTrigger value="ai" className="text-xs">
                   <Brain className="h-4 w-4 mr-1" />
-                  AI Integration
+                  {t('integration.tabs.ai')}
                 </TabsTrigger>
               </TabsList>
             </Tabs>
@@ -118,10 +122,19 @@ const SystemIntegrationHub: React.FC<SystemIntegrationHubProps> = ({
               {/* Transition Suggestions */}
               <TransitionSuggestions onTransition={handleViewChange} />
 
-              {/* Main Feature Content */}
-              <div className="transition-all duration-500 ease-in-out">
-                {renderCurrentFeature()}
-              </div>
+              {/* Main Feature Content with Animations */}
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentView}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.4, ease: "easeInOut" }}
+                  className="w-full"
+                >
+                  {renderCurrentFeature()}
+                </motion.div>
+              </AnimatePresence>
             </TabsContent>
 
             {/* Cultural Navigation */}
@@ -130,13 +143,13 @@ const SystemIntegrationHub: React.FC<SystemIntegrationHubProps> = ({
                 <div className="flex items-center space-x-3 mb-4">
                   <Compass className="h-6 w-6 text-primary" />
                   <div>
-                    <h2 className="text-lg font-semibold">Cultural Navigation System</h2>
+                    <h2 className="text-lg font-semibold">{t('integration.culturalNavigation.title')}</h2>
                     <p className="text-sm text-muted-foreground">
-                      Navigate SunPath AI in a way that honors your cultural preferences
+                      {t('integration.culturalNavigation.description')}
                     </p>
                   </div>
                 </div>
-                
+
                 <CulturalNavigation
                   culturalBackground={initialCulturalBackground}
                   currentView={currentView}
@@ -151,22 +164,22 @@ const SystemIntegrationHub: React.FC<SystemIntegrationHubProps> = ({
                 <div className="flex items-center space-x-3 mb-4">
                   <Zap className="h-6 w-6 text-primary" />
                   <div>
-                    <h2 className="text-lg font-semibold">Intelligent Feature Transitions</h2>
+                    <h2 className="text-lg font-semibold">{t('integration.transitions.title')}</h2>
                     <p className="text-sm text-muted-foreground">
-                      AI-powered suggestions for moving between features based on your cultural context
+                      {t('integration.transitions.description')}
                     </p>
                   </div>
                 </div>
-                
+
                 <div className="space-y-4">
                   <CulturalContextDisplay showDetails={true} />
                   <TransitionSuggestions onTransition={handleViewChange} />
-                  
+
                   {/* Transition History */}
                   <Card className="p-4 bg-muted/20">
-                    <h4 className="font-medium text-sm mb-2">Your Journey Today</h4>
+                    <h4 className="font-medium text-sm mb-2">{t('integration.transitions.journeyToday')}</h4>
                     <div className="flex items-center space-x-2 text-xs">
-                      <span className="text-muted-foreground">Visited:</span>
+                      <span className="text-muted-foreground">{t('integration.transitions.visited')}</span>
                       <div className="flex space-x-1">
                         {['dashboard', 'checkin', currentView].map((feature, index) => (
                           <span key={index} className="px-2 py-1 bg-secondary rounded text-secondary-foreground">
@@ -186,13 +199,13 @@ const SystemIntegrationHub: React.FC<SystemIntegrationHubProps> = ({
                 <div className="flex items-center space-x-3 mb-4">
                   <Brain className="h-6 w-6 text-primary" />
                   <div>
-                    <h2 className="text-lg font-semibold">AI Cultural Intelligence</h2>
+                    <h2 className="text-lg font-semibold">{t('integration.ai.title')}</h2>
                     <p className="text-sm text-muted-foreground">
-                      Advanced AI learning and adapting to provide culturally-appropriate support
+                      {t('integration.ai.description')}
                     </p>
                   </div>
                 </div>
-                
+
                 <AIIntegrationLayer />
               </Card>
             </TabsContent>
@@ -200,28 +213,31 @@ const SystemIntegrationHub: React.FC<SystemIntegrationHubProps> = ({
         </div>
 
         {/* Cultural Quality Assurance Footer */}
-        <div className="border-t border-border bg-muted/20 mt-12">
+        <div className="border-t border-border bg-muted/20 mt-12 mb-20">
           <div className="container mx-auto px-4 py-6">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
               <div className="flex items-center justify-center space-x-2">
                 <Shield className="h-4 w-4 text-primary" />
-                <span className="text-xs text-muted-foreground">Cultural Data Protected</span>
+                <span className="text-xs text-muted-foreground">{t('integration.footer.dataProtected')}</span>
               </div>
               <div className="flex items-center justify-center space-x-2">
                 <Users className="h-4 w-4 text-primary" />
-                <span className="text-xs text-muted-foreground">Community Validated</span>
+                <span className="text-xs text-muted-foreground">{t('integration.footer.validated')}</span>
               </div>
               <div className="flex items-center justify-center space-x-2">
                 <Globe className="h-4 w-4 text-primary" />
-                <span className="text-xs text-muted-foreground">Culturally Inclusive</span>
+                <span className="text-xs text-muted-foreground">{t('integration.footer.inclusive')}</span>
               </div>
               <div className="flex items-center justify-center space-x-2">
                 <Star className="h-4 w-4 text-primary" />
-                <span className="text-xs text-muted-foreground">Continuously Improving</span>
+                <span className="text-xs text-muted-foreground">{t('integration.footer.improving')}</span>
               </div>
             </div>
           </div>
         </div>
+
+        {/* Bottom Navigation */}
+        <BottomNavigation currentView={currentView} onViewChange={handleViewChange} />
       </div>
     </FeatureTransitionProvider>
   );

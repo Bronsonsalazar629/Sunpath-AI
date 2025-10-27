@@ -1,20 +1,20 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { useTheme } from './ThemeProvider';
+import { View, StyleSheet, Pressable } from 'react-native';
+import { useTheme } from '../../context/ThemeContext';
 
 export const Card = ({
   children,
   variant = 'default',
   padding = 'lg',
   style,
+  onPress,
   ...props
 }) => {
   const { theme, isDarkMode } = useTheme();
 
   const getCardStyle = () => {
     const baseStyle = {
-      borderRadius: parseFloat(theme.borderRadius.xl),
-      backgroundColor: isDarkMode ? theme.colors.dark.surface : theme.colors.light.surface,
+      borderRadius: parseFloat(theme.borderRadius.xl.replace('rem', '')) * 16,
     };
 
     // Padding variants
@@ -67,18 +67,30 @@ export const Card = ({
       },
     };
 
+    // Force white background AFTER all other styles to ensure it cannot be overridden
+    const forcedBackgroundStyle = variant !== 'primary'
+      ? { backgroundColor: isDarkMode ? theme.colors.dark.surface : '#FFFFFF' }
+      : {};
+
     return [
       baseStyle,
       paddingStyles[padding],
       variantStyles[variant],
       style,
+      forcedBackgroundStyle, // Force white background last (except for primary variant)
     ];
   };
 
+  const CardWrapper = onPress ? Pressable : View;
+
   return (
-    <View style={getCardStyle()} {...props}>
+    <CardWrapper
+      style={getCardStyle()}
+      onPress={onPress}
+      {...props}
+    >
       {children}
-    </View>
+    </CardWrapper>
   );
 };
 
