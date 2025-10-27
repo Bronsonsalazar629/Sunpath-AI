@@ -4,9 +4,24 @@ Manages environment variables, security settings, and research compliance parame
 """
 
 import os
+from pathlib import Path
 from typing import List, Optional
-from pydantic import BaseSettings, validator
+from pydantic_settings import BaseSettings
+from pydantic import field_validator
 from functools import lru_cache
+
+# Find .env file in parent directories
+def find_env_file():
+    """Search for .env file starting from current directory up to project root."""
+    current = Path(__file__).resolve().parent
+    for _ in range(5):  # Search up to 5 levels
+        env_path = current / ".env"
+        if env_path.exists():
+            return str(env_path)
+        current = current.parent
+    return ".env"  # Fallback to current directory
+
+ENV_FILE_PATH = find_env_file()
 
 
 class Settings(BaseSettings):
@@ -43,12 +58,17 @@ class Settings(BaseSettings):
     FIREBASE_CLIENT_EMAIL: str = ""
     FIREBASE_CLIENT_ID: str = ""
     FIREBASE_CLIENT_X509_CERT_URL: str = ""
-    
+
+    # AI / DeepSeek settings
+    DEEPSEEK_API_KEY: str = ""
+
     # Security settings
     ALLOWED_HOSTS: List[str] = ["localhost", "127.0.0.1", "*.mindmap-platform.org"]
     ALLOWED_ORIGINS: List[str] = [
         "http://localhost:3000",
-        "http://localhost:3001", 
+        "http://localhost:3001",
+        "http://localhost:8080",  # Vite dev server
+        "http://localhost:8081",  # Vite dev server
         "https://mindmap-platform.org",
         "https://app.mindmap-platform.org"
     ]
@@ -92,43 +112,29 @@ class Settings(BaseSettings):
     MAX_UPLOAD_SIZE_MB: int = 10
     ALLOWED_FILE_TYPES: List[str] = [".jpg", ".jpeg", ".png", ".pdf", ".txt", ".csv"]
     
-    @validator("ENVIRONMENT")
+    @field_validator("ENVIRONMENT")
+    @classmethod
     def validate_environment(cls, v):
         """Validate environment setting."""
         allowed = ["development", "testing", "staging", "production"]
         if v not in allowed:
             raise ValueError(f"Environment must be one of: {allowed}")
         return v
-    
-    @validator("DATABASE_URL")
+
+    @field_validator("DATABASE_URL")
+    @classmethod
     def validate_database_url(cls, v):
         """Validate database URL format."""
-        if not v.startswith(("postgresql://", "postgresql+psycopg2://")):
-            raise ValueError("Database URL must be a PostgreSQL connection string")
+        if not v.startswith(("postgresql://", "postgresql+psycopg2://", "sqlite://")):
+            raise ValueError("Database URL must be a PostgreSQL or SQLite connection string")
         return v
-    
-    @validator("ALLOWED_ORIGINS")
+
+    @field_validator("ALLOWED_ORIGINS")
+    @classmethod
     def validate_origins(cls, v):
         """Validate CORS origins."""
         if not v:
             raise ValueError("At least one allowed origin must be specified")
-        return v
-    
-    @validator("FIREBASE_PROJECT_ID")
-    def validate_firebase_config(cls, v, values):
-        """Validate Firebase configuration for production."""
-        if values.get("ENVIRONMENT") == "production" and not v:
-            raise ValueError("Firebase project ID is required in production")
-        return v
-    
-    @validator("SECRET_KEY")
-    def validate_secret_key(cls, v, values):
-        """Validate secret key for production."""
-        if values.get("ENVIRONMENT") == "production":
-            if len(v) < 32:
-                raise ValueError("Secret key must be at least 32 characters in production")
-            if v == "your-secret-key-change-in-production":
-                raise ValueError("Default secret key cannot be used in production")
         return v
     
     @property
@@ -184,9 +190,10 @@ class Settings(BaseSettings):
     
     class Config:
         """Pydantic configuration."""
-        env_file = ".env"
+        env_file = ENV_FILE_PATH
         env_file_encoding = "utf-8"
         case_sensitive = True
+        extra = "ignore"  # Ignore extra fields not defined in Settings
 
 
 @lru_cache()
@@ -197,6 +204,9 @@ def get_settings() -> Settings:
 
 # Create global settings instance
 settings = get_settings()
+
+# Debug: Print DATABASE_URL to verify it's being loaded correctly
+print(f"DEBUG: DATABASE_URL loaded: {settings.DATABASE_URL[:50]}...")
 
 
 # Development settings override

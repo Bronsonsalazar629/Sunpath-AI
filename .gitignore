@@ -50,7 +50,6 @@ venv.bak/
 # Configuration files with secrets
 config.js
 firebase-config.js
-.env.*
 *.key
 *.pem
 *.p12

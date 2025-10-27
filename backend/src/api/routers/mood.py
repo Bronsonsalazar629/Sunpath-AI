@@ -8,7 +8,7 @@ from datetime import datetime, timezone, date, timedelta
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, status, Request, Query
-from pydantic import BaseModel, validator, Field
+from pydantic import BaseModel, field_validator, Field
 from sqlalchemy.orm import Session
 from sqlalchemy import func, and_, desc
 from slowapi import Limiter
@@ -43,17 +43,18 @@ class MoodEntryCreate(BaseModel):
     latitude: Optional[float] = Field(None, ge=-90, le=90)
     longitude: Optional[float] = Field(None, ge=-180, le=180)
     location_accuracy: Optional[float] = Field(None, gt=0)
-    location_method: Optional[str] = Field(None, regex="^(gps|network|manual)$")
-    
+    location_method: Optional[str] = Field(None, pattern="^(gps|network|manual)$")
+
     # Entry metadata
-    entry_method: Optional[str] = Field("manual", regex="^(manual|prompted|automated)$")
+    entry_method: Optional[str] = Field("manual", pattern="^(manual|prompted|automated)$")
     notes: Optional[str] = Field(None, max_length=1000)
     mood_scale: str = Field("1-10", description="Mood scale used")
     
     # Research context
     entry_context: Optional[dict] = None  # Additional context data
     
-    @validator('entry_context')
+    @field_validator('entry_context')
+    @classmethod
     def validate_context(cls, v):
         if v and len(str(v)) > 5000:  # Prevent huge context objects
             raise ValueError('Entry context too large')
@@ -471,7 +472,7 @@ async def get_mood_trends(
     request: Request,
     current_user: AuthenticatedUser = Depends(get_current_active_user),
     db: Session = Depends(get_db),
-    period: str = Query("30d", regex="^(7d|30d|90d|1y)$", description="Time period for analysis"),
+    period: str = Query("30d", pattern="^(7d|30d|90d|1y)$", description="Time period for analysis"),
 ):
     """
     Get mood trends and analysis for the user.

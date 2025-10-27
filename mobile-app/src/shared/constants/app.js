@@ -14,13 +14,14 @@ export const THEME_NAMES = {
 };
 
 export const API_ENDPOINTS = {
-  BASE_URL: process.env.REACT_APP_API_URL || 'http://localhost:8000',
-  AUTH: '/api/auth',
-  USERS: '/api/users',
-  MOOD: '/api/mood',
-  RECOMMENDATIONS: '/api/recommendations',
-  INTERVENTIONS: '/api/interventions',
-  RESEARCH: '/api/research',
+  BASE_URL: process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8000',
+  AUTH: '/api/v1/auth',
+  USERS: '/api/v1/users',
+  MOOD: '/api/v1/mood',
+  RECOMMENDATIONS: '/api/v1/recommendations',
+  INTERVENTIONS: '/api/v1/interventions',
+  RESEARCH: '/api/v1/research',
+  ANALYTICS: '/api/v1/analytics',
 };
 
 export const STORAGE_KEYS = {

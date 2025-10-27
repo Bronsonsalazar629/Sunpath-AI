@@ -1,6 +1,6 @@
 # FastAPI Backend Testing Guide
 
-This guide covers comprehensive testing strategies for the MindMap Research API, including unit tests, integration tests, security tests, and research compliance validation.
+This guide covers comprehensive testing strategies for the Sunpath AI Research API, including unit tests, integration tests, security tests, and research compliance validation.
 
 ## Testing Overview
 

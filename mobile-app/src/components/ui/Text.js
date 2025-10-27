@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text as RNText } from 'react-native';
-import { useTheme } from './ThemeProvider';
+import { useTheme } from '../../context/ThemeContext';
 
 export const Text = ({
   children,
@@ -9,9 +9,33 @@ export const Text = ({
   color,
   align = 'left',
   style,
-  ...props
+  numberOfLines,
+  ellipsizeMode,
+  onPress,
+  testID,
+  accessible,
+  accessibilityLabel,
+  ...otherProps
 }) => {
   const { theme, isDarkMode } = useTheme();
+
+  // Only pass known valid React Native Text props
+  const validProps = {
+    numberOfLines,
+    ellipsizeMode,
+    onPress,
+    testID,
+    accessible,
+    accessibilityLabel,
+  };
+
+  // Filter out undefined props
+  const filteredProps = Object.keys(validProps).reduce((acc, key) => {
+    if (validProps[key] !== undefined) {
+      acc[key] = validProps[key];
+    }
+    return acc;
+  }, {});
 
   const getTextStyle = () => {
     // Variant styles (typography scale)
@@ -91,34 +115,47 @@ export const Text = ({
         // Check if it's a theme color path (e.g., 'brand.primary')
         if (color.includes('.')) {
           const colorPath = color.split('.');
-          let themeColor = theme.colors;
-          for (const path of colorPath) {
-            themeColor = themeColor[path];
+          let themeColor = theme?.colors;
+
+          try {
+            for (const path of colorPath) {
+              if (themeColor && themeColor[path]) {
+                themeColor = themeColor[path];
+              } else {
+                // Path not found, return default
+                return isDarkMode ? '#F8F9FA' : '#1E293B';
+              }
+            }
+            return themeColor || (isDarkMode ? '#F8F9FA' : '#1E293B');
+          } catch (error) {
+            // Fallback to default color
+            return isDarkMode ? '#F8F9FA' : '#1E293B';
           }
-          return themeColor || theme.colors.brand.text;
         }
         // Direct color value
         return color;
       }
 
       // Default text color based on theme
-      return isDarkMode ? theme.colors.dark.text : theme.colors.light.text;
+      return isDarkMode
+        ? (theme?.colors?.dark?.text || '#F8F9FA')
+        : (theme?.colors?.light?.text || '#1E293B');
     };
 
     return [
       {
-        fontFamily: theme.typography.fontFamily.primary,
+        fontFamily: theme?.typography?.fontFamily?.primary || 'System',
         color: getTextColor(),
         textAlign: align,
       },
-      variantStyles[variant],
-      weightStyles[weight],
+      variantStyles[variant] || {},
+      weightStyles[weight] || {},
       style,
     ];
   };
 
   return (
-    <RNText style={getTextStyle()} {...props}>
+    <RNText style={getTextStyle()} {...filteredProps}>
       {children}
     </RNText>
   );

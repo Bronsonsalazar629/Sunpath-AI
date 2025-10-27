@@ -1,6 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, ActivityIndicator } from 'react-native';
-import { useTheme } from './ThemeProvider';
+import * as Haptics from 'expo-haptics';
+import { useTheme } from '../../context/ThemeContext';
 
 export const Button = ({
   children,
@@ -19,7 +20,7 @@ export const Button = ({
     const baseStyle = {
       alignItems: 'center',
       justifyContent: 'center',
-      borderRadius: parseFloat(theme.borderRadius.lg),
+      borderRadius: parseFloat(theme.borderRadius.lg.replace('rem', '')) * 16,
       flexDirection: 'row',
     };
 
@@ -118,10 +119,18 @@ export const Button = ({
     ];
   };
 
+  const handlePress = () => {
+    // Trigger haptic feedback
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    if (onPress) {
+      onPress();
+    }
+  };
+
   return (
     <TouchableOpacity
       style={getButtonStyle()}
-      onPress={onPress}
+      onPress={handlePress}
       disabled={disabled || loading}
       activeOpacity={0.7}
       {...props}

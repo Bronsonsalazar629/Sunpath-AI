@@ -3,10 +3,11 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { 
-  ArrowRight, 
-  Sparkles, 
-  Target, 
+import { useTranslation } from 'react-i18next';
+import {
+  ArrowRight,
+  Sparkles,
+  Target,
   TrendingUp,
   Heart,
   Brain,
@@ -168,6 +169,7 @@ interface TransitionSuggestionsProps {
 }
 
 export const TransitionSuggestions: React.FC<TransitionSuggestionsProps> = ({ onTransition }) => {
+  const { t } = useTranslation();
   const { suggestedTransitions, culturalContext } = useFeatureTransition();
 
   if (suggestedTransitions.length === 0) return null;
@@ -186,9 +188,9 @@ export const TransitionSuggestions: React.FC<TransitionSuggestionsProps> = ({ on
     <Card className={`p-4 ${getCulturalTransitionStyle()}`}>
       <div className="flex items-center space-x-2 mb-3">
         <Sparkles className="h-4 w-4 text-primary" />
-        <h3 className="font-medium text-sm">Culturally-Aware Suggestions</h3>
+        <h3 className="font-medium text-sm">{t('culturalIntelligence.culturalAIInsights')}</h3>
       </div>
-      
+
       <div className="space-y-3">
         {suggestedTransitions.map((transition, index) => (
           <div key={index} className="space-y-2">
@@ -198,11 +200,11 @@ export const TransitionSuggestions: React.FC<TransitionSuggestionsProps> = ({ on
                 {Math.round(transition.confidence * 100)}% match
               </Badge>
             </div>
-            
+
             <p className="text-xs text-muted-foreground italic">
               {transition.culturalContext}
             </p>
-            
+
             <div className="flex items-center justify-between">
               <Progress value={transition.confidence * 100} className="flex-1 mr-3" />
               <Button
@@ -211,7 +213,7 @@ export const TransitionSuggestions: React.FC<TransitionSuggestionsProps> = ({ on
                 className="text-xs"
               >
                 <ArrowRight className="h-3 w-3 mr-1" />
-                Continue
+                {t('enhancedCheckIn.continue')}
               </Button>
             </div>
           </div>
@@ -225,9 +227,10 @@ interface CulturalContextDisplayProps {
   showDetails?: boolean;
 }
 
-export const CulturalContextDisplay: React.FC<CulturalContextDisplayProps> = ({ 
-  showDetails = false 
+export const CulturalContextDisplay: React.FC<CulturalContextDisplayProps> = ({
+  showDetails = false
 }) => {
+  const { t } = useTranslation();
   const { culturalContext, currentFeature } = useFeatureTransition();
 
   const getContextIcon = (aspect: string) => {
@@ -244,24 +247,24 @@ export const CulturalContextDisplay: React.FC<CulturalContextDisplayProps> = ({
     <Card className="p-4 bg-muted/30 border-muted">
       <div className="flex items-center space-x-2 mb-3">
         <Brain className="h-4 w-4 text-muted-foreground" />
-        <h3 className="font-medium text-sm">Cultural Intelligence Active</h3>
+        <h3 className="font-medium text-sm">{t('culturalIntelligence.title')} {t('culturalIntelligence.active')}</h3>
       </div>
-      
+
       <div className="grid grid-cols-2 gap-3 text-xs">
         <div>
-          <span className="text-muted-foreground">Background:</span>
+          <span className="text-muted-foreground">{t('culturalIntelligence.background')}</span>
           <p className="font-medium">{culturalContext.background}</p>
         </div>
         <div>
-          <span className="text-muted-foreground">Communication:</span>
+          <span className="text-muted-foreground">{t('culturalIntelligence.communication')}</span>
           <p className="font-medium">{culturalContext.communicationStyle}</p>
         </div>
         <div>
-          <span className="text-muted-foreground">Current State:</span>
+          <span className="text-muted-foreground">{t('culturalIntelligence.currentState')}</span>
           <p className="font-medium">{culturalContext.currentEmotionalState}</p>
         </div>
         <div>
-          <span className="text-muted-foreground">Support Style:</span>
+          <span className="text-muted-foreground">{t('culturalIntelligence.supportStyle')}</span>
           <p className="font-medium">{culturalContext.preferences.support}</p>
         </div>
       </div>
@@ -269,8 +272,7 @@ export const CulturalContextDisplay: React.FC<CulturalContextDisplayProps> = ({
       {showDetails && (
         <div className="mt-3 pt-3 border-t border-muted">
           <p className="text-xs text-muted-foreground">
-            AI is continuously learning your cultural preferences to provide more personalized 
-            and culturally-appropriate wellness support across all features.
+            {t('aiCulturalIntelligence.learningDescription')}
           </p>
         </div>
       )}

@@ -4,11 +4,12 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { 
-  Brain, 
-  Sparkles, 
-  Eye, 
-  Shield, 
+import { useTranslation } from 'react-i18next';
+import {
+  Brain,
+  Sparkles,
+  Eye,
+  Shield,
   TrendingUp,
   Users,
   Heart,
@@ -47,6 +48,7 @@ interface BiasMonitoring {
 }
 
 const AIIntegrationLayer: React.FC = () => {
+  const { t } = useTranslation();
   const [aiInsights, setAiInsights] = useState<AIInsight[]>([]);
   const [culturalPatterns, setCulturalPatterns] = useState<CulturalPattern[]>([]);
   const [biasMonitoring, setBiasMonitoring] = useState<BiasMonitoring[]>([]);
@@ -169,9 +171,9 @@ const AIIntegrationLayer: React.FC = () => {
         <div className="flex items-center space-x-3 mb-4">
           <Brain className="h-6 w-6 text-primary" />
           <div>
-            <h2 className="text-lg font-semibold">Cultural AI Intelligence</h2>
+            <h2 className="text-lg font-semibold">{t('culturalAIDetails.title')}</h2>
             <p className="text-sm text-muted-foreground">
-              Advanced AI learning your unique cultural wellness patterns
+              {t('culturalAIDetails.advancedTitle')}
             </p>
           </div>
         </div>
@@ -179,7 +181,7 @@ const AIIntegrationLayer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="space-y-2">
             <div className="flex justify-between items-center">
-              <span className="text-sm font-medium">Cultural Learning Progress</span>
+              <span className="text-sm font-medium">{t('culturalIntelligence.culturalLearningProgress')}</span>
               <span className="text-sm text-muted-foreground">{aiLearningProgress}%</span>
             </div>
             <Progress value={aiLearningProgress} className="h-2" />
@@ -187,7 +189,7 @@ const AIIntegrationLayer: React.FC = () => {
 
           <div className="space-y-2">
             <div className="flex justify-between items-center">
-              <span className="text-sm font-medium">Cultural Accuracy</span>
+              <span className="text-sm font-medium">{t('culturalIntelligence.culturalAccuracy')}</span>
               <span className="text-sm text-muted-foreground">{culturalAccuracy}%</span>
             </div>
             <Progress value={culturalAccuracy} className="h-2" />
@@ -195,7 +197,7 @@ const AIIntegrationLayer: React.FC = () => {
 
           <div className="space-y-2">
             <div className="flex justify-between items-center">
-              <span className="text-sm font-medium">Active Insights</span>
+              <span className="text-sm font-medium">{t('culturalIntelligence.activeInsights')}</span>
               <Badge variant="secondary">{aiInsights.length}</Badge>
             </div>
             <div className="flex space-x-1">
@@ -211,7 +213,7 @@ const AIIntegrationLayer: React.FC = () => {
       <div className="space-y-4">
         <div className="flex items-center space-x-2">
           <Sparkles className="h-5 w-5 text-primary" />
-          <h3 className="text-lg font-semibold">Cultural AI Insights</h3>
+          <h3 className="text-lg font-semibold">{t('culturalIntelligence.culturalAIInsights')}</h3>
         </div>
 
         {aiInsights.map((insight) => {
@@ -266,7 +268,7 @@ const AIIntegrationLayer: React.FC = () => {
       <div className="space-y-4">
         <div className="flex items-center space-x-2">
           <TrendingUp className="h-5 w-5 text-primary" />
-          <h3 className="text-lg font-semibold">Discovered Cultural Patterns</h3>
+          <h3 className="text-lg font-semibold">{t('discoveredCulturalPatterns.title')}</h3>
         </div>
 
         {culturalPatterns.map((pattern, index) => (
@@ -304,7 +306,7 @@ const AIIntegrationLayer: React.FC = () => {
       <div className="space-y-4">
         <div className="flex items-center space-x-2">
           <Shield className="h-5 w-5 text-primary" />
-          <h3 className="text-lg font-semibold">Cultural Fairness Monitoring</h3>
+          <h3 className="text-lg font-semibold">{t('culturalIntelligence.culturalFairnessMonitoring')}</h3>
         </div>
 
         {biasMonitoring.map((monitoring, index) => (
@@ -315,15 +317,15 @@ const AIIntegrationLayer: React.FC = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <div className="flex justify-between text-xs">
-                    <span>Accuracy Score</span>
+                    <span>{t('culturalIntelligence.accuracyScore')}</span>
                     <span>{Math.round(monitoring.accuracyScore * 100)}%</span>
                   </div>
                   <Progress value={monitoring.accuracyScore * 100} className="h-1" />
                 </div>
-                
+
                 <div className="space-y-2">
                   <div className="flex justify-between text-xs">
-                    <span>Representation Score</span>
+                    <span>{t('culturalIntelligence.representationScore')}</span>
                     <span>{Math.round(monitoring.representationScore * 100)}%</span>
                   </div>
                   <Progress value={monitoring.representationScore * 100} className="h-1" />
@@ -334,14 +336,14 @@ const AIIntegrationLayer: React.FC = () => {
                 <Alert>
                   <AlertTriangle className="h-4 w-4" />
                   <AlertDescription className="text-xs">
-                    Active improvements: {monitoring.issues.join(', ')}
+                    {t('culturalIntelligence.activeImprovements')} {monitoring.issues.join(', ')}
                   </AlertDescription>
                 </Alert>
               )}
 
               {monitoring.improvements.length > 0 && (
                 <div className="space-y-1">
-                  <p className="text-xs font-medium">Recent Improvements:</p>
+                  <p className="text-xs font-medium">{t('culturalIntelligence.recentImprovements')}</p>
                   {monitoring.improvements.map((improvement, idx) => (
                     <div key={idx} className="flex items-center space-x-2 text-xs">
                       <CheckCircle className="h-3 w-3 text-green-500" />
@@ -359,13 +361,10 @@ const AIIntegrationLayer: React.FC = () => {
       <Card className="p-4 bg-muted/20 border-muted">
         <div className="flex items-center space-x-2 mb-3">
           <Eye className="h-4 w-4 text-muted-foreground" />
-          <h4 className="font-medium text-sm">AI Transparency</h4>
+          <h4 className="font-medium text-sm">{t('culturalIntelligence.aiTransparency')}</h4>
         </div>
         <p className="text-xs text-muted-foreground leading-relaxed">
-          Our AI continuously learns from your interactions across all features to provide 
-          culturally-appropriate wellness support. All learning respects your privacy settings 
-          and cultural data sovereignty preferences. You can review and provide feedback on 
-          AI recommendations to help improve cultural accuracy for your community.
+          {t('aiCulturalIntelligence.learningDescription')}
         </p>
       </Card>
     </div>

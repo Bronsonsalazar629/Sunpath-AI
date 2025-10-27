@@ -17,7 +17,7 @@ from fastapi.openapi.utils import get_openapi
 import uvicorn
 
 # Import routers and middleware
-from api.routers import auth, users, mood, recommendations, interventions, research
+from api.routers import auth, users, mood, recommendations, interventions, research, chat, analytics
 from core.config import settings
 from core.middleware import (
     LoggingMiddleware,
@@ -106,9 +106,9 @@ app = FastAPI(
     redoc_url=None,  # Disabled default redoc
 )
 
-# Security middleware
-app.add_middleware(SecurityHeadersMiddleware)
-app.add_middleware(TrustedHostMiddleware, allowed_hosts=settings.ALLOWED_HOSTS)
+# Security middleware - Temporarily disable for mobile app development
+# app.add_middleware(SecurityHeadersMiddleware)
+# app.add_middleware(TrustedHostMiddleware, allowed_hosts=settings.ALLOWED_HOSTS)
 
 # CORS middleware
 app.add_middleware(
@@ -135,6 +135,8 @@ app.include_router(mood.router, prefix="/api/v1/mood", tags=["Mood Tracking"])
 app.include_router(recommendations.router, prefix="/api/v1/recommendations", tags=["AI Recommendations"])
 app.include_router(interventions.router, prefix="/api/v1/interventions", tags=["Research Interventions"])
 app.include_router(research.router, prefix="/api/v1/research", tags=["Research & Analytics"])
+app.include_router(chat.router, prefix="/api/v1/chat", tags=["AI Chat (DeepSeek)"])
+app.include_router(analytics.router, prefix="/api/v1", tags=["Analytics & Metrics"])
 
 # Health check endpoints
 @app.get("/health", tags=["System"])

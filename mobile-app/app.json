@@ -6,7 +6,6 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "newArchEnabled": true,
     "primaryColor": "#FBBF24",
     "description": "AI-powered mental health support and guidance - Navigate Your Path to Mental Wellness",
     "splash": {
@@ -25,8 +24,7 @@
         "backgroundColor": "#F8F9FA"
       },
       "package": "com.sunpath.ai",
-      "versionCode": 1,
-      "edgeToEdgeEnabled": true
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -34,9 +32,12 @@
     },
     "extra": {
       "eas": {
-        "projectId": "sunpath-ai-mobile"
+        "projectId": "830367b3-5952-46a8-85d5-2c051a17fade"
       }
     },
-    "scheme": "sunpath-ai"
+    "scheme": "sunpath-ai",
+    "plugins": [
+      "expo-localization"
+    ]
   }
 }

@@ -3,13 +3,14 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  Home, 
-  Heart, 
-  MessageCircle, 
-  Map, 
-  BarChart3, 
-  BookOpen, 
+import { useTranslation } from 'react-i18next';
+import {
+  Home,
+  Heart,
+  MessageCircle,
+  Map,
+  BarChart3,
+  BookOpen,
   Settings,
   Users,
   Globe,
@@ -112,6 +113,7 @@ const CulturalNavigation: React.FC<CulturalNavigationProps> = ({
   onViewChange,
   urgencyLevel = 'low'
 }) => {
+  const { t } = useTranslation();
   const [navigationMode, setNavigationMode] = useState<'cultural' | 'crisis' | 'all'>('cultural');
 
   const getCulturallyRelevantItems = () => {
@@ -182,10 +184,10 @@ const CulturalNavigation: React.FC<CulturalNavigationProps> = ({
       {/* Cultural Navigation Header */}
       <div className="text-center space-y-2">
         <h2 className="text-xl font-semibold text-foreground">
-          Your Cultural Wellness Journey
+          {t('culturalNavigation.journeyTitle')}
         </h2>
         <p className="text-sm text-muted-foreground">
-          Features adapted to honor your cultural way of seeking wellness
+          {t('culturalNavigation.featuresTitle')}
         </p>
       </div>
 
@@ -194,22 +196,22 @@ const CulturalNavigation: React.FC<CulturalNavigationProps> = ({
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="cultural" className="text-xs">
             <Compass className="h-4 w-4 mr-1" />
-            Cultural
+            {t('integration.tabs.navigation')}
           </TabsTrigger>
           <TabsTrigger value="crisis" className="text-xs">
             <Shield className="h-4 w-4 mr-1" />
-            Quick Access
+            {t('culturalNavigation.quickAccessTitle')}
           </TabsTrigger>
           <TabsTrigger value="all" className="text-xs">
             <Globe className="h-4 w-4 mr-1" />
-            All Features
+            {t('culturalNavigation.allFeatures')}
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="cultural" className="space-y-4">
           <div className="text-center">
             <p className="text-sm text-muted-foreground">
-              Features most relevant to your cultural background and preferences
+              {t('culturalNavigation.relevantFeatures')}
             </p>
           </div>
           <div className={`grid ${getCulturalNavigationStyle()}`}>
@@ -220,7 +222,7 @@ const CulturalNavigation: React.FC<CulturalNavigationProps> = ({
         <TabsContent value="crisis" className="space-y-4">
           <div className="text-center">
             <p className="text-sm text-muted-foreground">
-              Quick access to support when you need it most
+              {t('resourceMap.crisis.subtitle')}
             </p>
           </div>
           <div className="grid grid-cols-1 gap-3">
@@ -231,7 +233,7 @@ const CulturalNavigation: React.FC<CulturalNavigationProps> = ({
         <TabsContent value="all" className="space-y-4">
           <div className="text-center">
             <p className="text-sm text-muted-foreground">
-              All SunPath AI features for your complete wellness journey
+              {t('culturalNavigation.yourWellnessHome')}
             </p>
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -245,9 +247,9 @@ const CulturalNavigation: React.FC<CulturalNavigationProps> = ({
         <div className="flex items-center space-x-3">
           <Star className="h-5 w-5 text-primary" />
           <div>
-            <h4 className="font-medium text-sm">Cultural Adaptation Active</h4>
+            <h4 className="font-medium text-sm">{t('culturalNavigation.adaptationActive')}</h4>
             <p className="text-xs text-muted-foreground">
-              Your interface is adapted for {culturalBackground} communication and wellness preferences
+              {t('culturalNavigation.interfaceAdapted')}
             </p>
           </div>
         </div>
@@ -258,9 +260,9 @@ const CulturalNavigation: React.FC<CulturalNavigationProps> = ({
         <div className="flex items-center space-x-3">
           <Brain className="h-5 w-5 text-secondary-foreground" />
           <div>
-            <h4 className="font-medium text-sm">AI Cultural Intelligence</h4>
+            <h4 className="font-medium text-sm">{t('aiCulturalIntelligence.title')}</h4>
             <p className="text-xs text-muted-foreground">
-              Learning and adapting to provide culturally-appropriate support across all features
+              {t('aiCulturalIntelligence.description')}
             </p>
           </div>
         </div>
