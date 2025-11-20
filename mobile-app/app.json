@@ -1,0 +1,43 @@
+{
+  "expo": {
+    "name": "SunPath AI",
+    "slug": "sunpath-ai",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "primaryColor": "#FBBF24",
+    "description": "AI-powered mental health support and guidance - Navigate Your Path to Mental Wellness",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#F8F9FA"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.sunpath.ai",
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#F8F9FA"
+      },
+      "package": "com.sunpath.ai",
+      "versionCode": 1
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "830367b3-5952-46a8-85d5-2c051a17fade"
+      }
+    },
+    "scheme": "sunpath-ai",
+    "plugins": [
+      "expo-localization"
+    ]
+  }
+}
