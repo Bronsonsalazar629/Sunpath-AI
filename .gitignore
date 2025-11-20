@@ -56,6 +56,12 @@ firebase-config.js
 *.pfx
 secrets/
 
+# Test files with API keys
+test-*-api.js
+*-api-test.js
+*-diagnostic-results.json
+*-test-results.json
+
 # IDE
 .vscode/
 .idea/
